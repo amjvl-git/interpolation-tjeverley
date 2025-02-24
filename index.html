@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<canvas id="canvas" width="800" height="600" style="border:1px solid#000000;">
+Your browser does not support the HTML canvas tag.
+</canvas>
+<div>
+    <p>
+        P1: <input type="range" min="0" max="399" value="200" id="P1x"><span id="P1xDisplay">200</span>
+        <input type="range" min="0" max="299" value="150" id="P1y"><span id="P1yDisplay">150</span>
+    </p>
+    <p>
+        P2: <input type="range" min="400" max="800" value="600" id="P2x"><span id="P2xDisplay">600</span>
+        <input type="range" min="0" max="299" value="150" id="P2y"><span id="P2yDisplay">150</span>
+    </p>
+    <p>
+        P3: <input type="range" min="400" max="800" value="600" id="P3x"><span id="P3xDisplay">600</span>
+        <input type="range" min="300" max="600" value="450" id="P3y"><span id="P3yDisplay">450</span>
+    </p>
+    <p>
+        P4: <input type="range" min="0" max="399" value="200" id="P4x"><span id="P4xDisplay">200</span>
+        <input type="range" min="300" max="600" value="450" id="P4y"><span id="P4yDisplay">450</span>
+    </p>
+ </div>
+
+<script>
+
+// Initialise variables
+
+// Point 1 x and y values
+var p1x = document.getElementById("P1x").value;
+var p1y = document.getElementById("P1y").value;
+// Point 2 x and y values
+var p2x = document.getElementById("P2x").value;
+var p2y = document.getElementById("P2y").value;
+// Point 3 x and y values
+var p3x = document.getElementById("P3x").value;
+var p3y = document.getElementById("P3y").value;
+// Point 4 x and y values
+var p4x = document.getElementById("P4x").value;
+var p4y = document.getElementById("P4y").value;
+
+// Radius of the point moving around
+var radius = 10;
+
+// Speed of the point moving around in pixels per second
+var speed = 100;
+// Current position of the point moving around
+var x = p1x;
+var y = p2y;
+// Current value of t - parametic line parameter
+var t = 0;
+// Current value of the elapsed time, sum of timesteps
+var sumts = 0;
+
+// Intilize the variables and  display by adding listeners to sliders
+document.getElementById("P1x").oninput = function() {
+  p1x = this.value;
+  document.getElementById("P1xDisplay").innerText = "" + p1x;
+  onRender();
+}
+
+document.getElementById("P1y").oninput = function() {
+  p1y = this.value;
+  document.getElementById("P1yDisplay").innerText = "" + p1y;
+  onRender();
+}
+
+document.getElementById("P2x").oninput = function() {
+  p2x = this.value;
+  document.getElementById("P2xDisplay").innerText = "" + p2x;
+  onRender();
+}
+
+document.getElementById("P2y").oninput = function() {
+  p2y = this.value;
+  document.getElementById("P2yDisplay").innerText = "" + p2y;
+  onRender();
+}
+
+document.getElementById("P3x").oninput = function() {
+  p3x = this.value;
+  document.getElementById("P3xDisplay").innerText = "" + p3x;
+  onRender();
+}
+
+document.getElementById("P3y").oninput = function() {
+  p3y = this.value;
+  document.getElementById("P3yDisplay").innerText = "" + p3y;
+  onRender();
+}
+
+document.getElementById("P4x").oninput = function() {
+  p4x = this.value;
+  document.getElementById("P4xDisplay").innerText = "" + p4x;
+  onRender();
+}
+
+document.getElementById("P4y").oninput = function() {
+  p4y = this.value;
+  document.getElementById("P4yDisplay").innerText = "" + p4y;
+  onRender();
+}
+
+function onRender()
+{
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+ 
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw points
+    ctx.strokeStyle = "#B8860B";
+    ctx.beginPath();
+    ctx.arc(p1x, p1y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(p2x, p2y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(p3x, p3y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.arc(p4x, p4y, radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // Draw NPC
+    ctx.fillStyle = "#6495ED";
+    ctx.beginPath();
+    ctx.arc(x, y, radius / 2, 0, 2 * Math.PI);
+    ctx.fill();
+}
+
+function onUpdate(timestep)
+{
+    // Set the values of x and y so the blue circle takes a path around the four points
+    sumts = sumts + timestep;
+}
+
+// Main gameLoop
+function gameLoop(timestamp) {
+    let timestep = timestamp - lastRender;
+    let seconds = timestep / 1000;
+    onUpdate(seconds); 
+    onRender();
+
+    lastRender = timestamp;
+    window.requestAnimationFrame(gameLoop);
+}
+
+var lastRender = 0;
+window.requestAnimationFrame(gameLoop);
+</script>
+
+</body>
+</html>
