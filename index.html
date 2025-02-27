@@ -28,6 +28,14 @@ Your browser does not support the HTML canvas tag.
 <script>
 
 // Initialise variables
+var points = [
+  [200, 150],
+  [600, 150],
+  [600, 450],
+  [200, 450]
+];
+
+var originPoint = 0;
 
 // Point 1 x and y values
 var p1x = document.getElementById("P1x").value;
@@ -52,6 +60,7 @@ var x = p1x;
 var y = p2y;
 // Current value of t - parametic line parameter
 var t = 0;
+var t_increment;
 // Current value of the elapsed time, sum of timesteps
 var sumts = 0;
 
@@ -141,6 +150,26 @@ function onUpdate(timestep)
 {
     // Set the values of x and y so the blue circle takes a path around the four points
     sumts = sumts + timestep;
+    let x1 = points[originPoint][0];
+    let x2 = points[originPoint + 1][0];
+    let y1 = points[originPoint][1];
+    let y2 = points[originPoint + 1][1];
+    
+    var distance = Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
+    t_increment = speed / distance;
+    t += t_increment * timestep;
+    if (t > 1) {
+      t = 0;
+      originPoint = (originPoint + 1) % (points.length - 1);
+    }
+    // console.log(originPoint)
+
+    // if (originPoint > 3) {
+    //   originPoint = 0;
+    // }
+
+    x = (1 - t) * x1 + t * x2;
+    y = (1 - t) * y1 + t * y2;
 }
 
 // Main gameLoop
